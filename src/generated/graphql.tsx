@@ -740,6 +740,13 @@ export type LaunchListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type LaunchListQuery = { __typename?: 'Query', launches?: Array<{ __typename?: 'Launch', flight_number?: number | null, mission_name?: string | null, launch_year?: number | null } | null> | null };
 
+export type LaunchProfileQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type LaunchProfileQuery = { __typename?: 'Query', launch?: { __typename?: 'Launch', flight_number?: number | null, mission_name?: string | null, launch_year?: number | null, launch_success?: boolean | null, details?: string | null, launch_site?: { __typename?: 'LaunchSite', site_name?: string | null } | null, rocket?: { __typename?: 'LaunchRocket', rocket_name?: string | null, rocket_type?: string | null } | null, links?: { __typename?: 'LaunchLinks', flickr_images?: Array<string | null> | null } | null } | null };
+
 
 export const LaunchListDocument = gql`
     query LaunchList {
@@ -777,3 +784,52 @@ export function useLaunchListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type LaunchListQueryHookResult = ReturnType<typeof useLaunchListQuery>;
 export type LaunchListLazyQueryHookResult = ReturnType<typeof useLaunchListLazyQuery>;
 export type LaunchListQueryResult = Apollo.QueryResult<LaunchListQuery, LaunchListQueryVariables>;
+export const LaunchProfileDocument = gql`
+    query LaunchProfile($id: String!) {
+  launch(id: $id) {
+    flight_number
+    mission_name
+    launch_year
+    launch_success
+    details
+    launch_site {
+      site_name
+    }
+    rocket {
+      rocket_name
+      rocket_type
+    }
+    links {
+      flickr_images
+    }
+  }
+}
+    `;
+
+/**
+ * __useLaunchProfileQuery__
+ *
+ * To run a query within a React component, call `useLaunchProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLaunchProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLaunchProfileQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useLaunchProfileQuery(baseOptions: Apollo.QueryHookOptions<LaunchProfileQuery, LaunchProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LaunchProfileQuery, LaunchProfileQueryVariables>(LaunchProfileDocument, options);
+      }
+export function useLaunchProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LaunchProfileQuery, LaunchProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LaunchProfileQuery, LaunchProfileQueryVariables>(LaunchProfileDocument, options);
+        }
+export type LaunchProfileQueryHookResult = ReturnType<typeof useLaunchProfileQuery>;
+export type LaunchProfileLazyQueryHookResult = ReturnType<typeof useLaunchProfileLazyQuery>;
+export type LaunchProfileQueryResult = Apollo.QueryResult<LaunchProfileQuery, LaunchProfileQueryVariables>;
